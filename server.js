@@ -17,7 +17,7 @@ app.use(bodyParser.json()); // parser for json
 app.use( express.static( __dirname + '/client' ));
 app.engine('handlebars', handlebars.engine);  // set engine
 app.set('view engine', 'handlebars');
-app.set('port', 3002); // set port 3001
+app.set('port', 3000); // set port 3001
 
 
 ////////////////////////////Routes
