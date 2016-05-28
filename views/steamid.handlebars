@@ -1,0 +1,74 @@
+
+<h1>Getting Steam Account Information</h1>
+<ul>
+    <li>
+        <h4> Makings the get request </h4>
+        <p>Unlike before, this get requests an API key. I won't be sharing mine with
+            you but if you have been following along, you should have your own.
+            The request looks like <strong> http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=XXXXXXXXXXXXXXXXXXXXXXX&steamids=76561197960435530 </strong>
+            The only parameters here are key=xxx and steamid=xxx. The steamid must be in the
+            64-bit format. If you dont know your steamid, you can look it up all
+            all the versions using the website <a href="https://steamid.xyz/">here</a>
+        </p>
+    </li>
+    <li>
+        <h4> Displaying the data</h4>
+        <p>
+            Much like before, we are returned a JSON text file. Unlike last time the data is
+            a bit more "cryptic". For example, the date of account creation is
+            stored as a unix time stamp which is useful for storing dates. For
+            us to make this readable to us, we are going to need to install the
+            node module
+        </p>
+    </li>
+    <li>
+        <h4> Formatting the data</h4>
+        <p>By accessing the elements and using some for loops we can add some formatting
+            to our JSON object.
+        </p>
+        <p>Try the form below. Using some handlebars logic, it sets each header to
+            be a title and its content to be the article
+            <div>
+                <form method="POST">
+                    <fieldset>
+                        <label>Enter a 64-bit steamID
+                            <input type="text" name="steamid" size="30" maxlength=100></input>
+                        </label>
+                        <input type="submit" name="steamid" value="Submit">
+                    </fieldset>
+                </form>
+
+            </div>
+            <br>
+            <div id=JSON-DATA>
+                {{#if steam}}
+                <ul>
+                    <li>
+                        <h5>{{steam.username}}</h5>
+                        <br>
+                        <img src={{steam.picture}} style="width:184px;height:184px;">
+                        <br>
+                        <h6>Date Of Account Creation</h6>
+                        <br>
+                        <p>The unix timestamp '{{steam.unixTime}}' = '{{steam.date}}'</p>
+                    </li>
+                </ul>
+                {{/if}}
+            </div>
+    </li>
+    <li>
+  <iframe
+  style="width: 100%; height: 300px"
+  src= "https://jsfiddle.net/funkydel/x41zwpm0/embedded/"
+  >
+</iframe>
+<p>In this api call, we will be needing the api key we generated earlier on. I did not link mine in this code. One thing that has changed in this code
+        is the extra logic to test if the context.steam.response.players[0] exists. This is done so we dont throw an error in case the user throws us
+        a bad get request. The JSON object that returns wont parse the same way and will crash the server. Instead if you fail to pass a valid id, it
+        opens a new handlebars adds text saying "That user does note exist". When a user does pass the a valid 64-bit steamid, the JSON object gets
+        parsed and the elements we want to display are extracted into other variables. This variabled then are triggered in the steamid handlebars file
+        to expand into the variables that are stored there. One interesting thing about this is that time was stored as unix time stamp. The library
+        moment made conversions from unix time to a more readable format.
+</p>
+</ul>
+<a href="/games">next</a>
