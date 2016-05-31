@@ -10,7 +10,7 @@ module.exports = function(app, request, mysql) {
         res.render('home');
     });
 
-    app.get('/insert', function(req, res, next) {
+    app.get('/insert', function(req, res, next) { // used to insert into table
         var context = {};
         if (req.query.name != "") {
             mysql.pool.query("INSERT INTO workouts (`name`,`reps`,`weight`,`date`,`lbs`)VALUES (?,?,?,?,?)", [req.query.name, req.query.reps, req.query.weight, req.query.date, req.query.lbs]);
@@ -24,7 +24,7 @@ module.exports = function(app, request, mysql) {
             res.send(context.results);
         });
     });
-    app.get('/getdata', function(req, res, next) {
+    app.get('/getdata', function(req, res, next) {  // selects data and sends back json obj of the table
         var context = {};
         mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields) {
             if (err) {
@@ -36,18 +36,13 @@ module.exports = function(app, request, mysql) {
         });
     });
 
-    app.get('/delete', function(req, res, next) {
+    app.get('/delete', function(req, res, next) {  // deletes
         var context = {};
         mysql.pool.query("DELETE FROM workouts WHERE id=?", [req.query.row_id]);
         res.send("success");
     });
 
-    app.get('/simple-update', function(req, res, next) {
-                    console.log(req.query.name);
-                    console.log(req.query.reps);
-                    console.log(req.query.weight);
-                    console.log(req.query.date);
-                    console.log(req.query.row_id);
+    app.get('/simple-update', function(req, res, next) {  // simple update since data is autofilled from before. 
         mysql.pool.query("UPDATE workouts SET `name` = ?, `reps` = ?, `weight`=?, `date`=? , `lbs`=? WHERE `id`=? ", [req.query.name, req.query.reps, req.query.weight, req.query.date,req.query.lbs, req.query.row_id],
             function(err, result) {
                 if (err) {

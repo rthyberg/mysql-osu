@@ -1,6 +1,6 @@
  document.addEventListener('DOMContentLoaded', bindSubmit);
 
- function deleteTable() {
+ function deleteTable() {   // delete displayed table
      // set up table with new elements
      var myNode = document.getElementById("woTable");
      while (myNode.firstChild) {
@@ -8,7 +8,7 @@
      }
  }
 
- function getData() {
+ function getData() {      // refresh table data
      var getRows = new XMLHttpRequest();
      getRows.open("GET", "http://52.38.65.142:3000/getdata?", true);
      getRows.addEventListener('load', function() {
@@ -25,7 +25,7 @@
  }
  getData();
 
- function buildTable(data) {
+ function buildTable(data) {  // builds table and event listeners
      var tableJson;
      var woTable = document.createElement('tr');
      var th_name = document.createElement('th');
@@ -52,7 +52,7 @@
      var tr_lbs = [];
      var tr_but = [];
      var tr_ed = [];
-     for (item in data) {
+     for (item in data) {  // makes table rows in a loop
          // create row
          tr[item] = document.createElement("tr");
          tr[item].id = "row" + data[item].id;
@@ -101,7 +101,7 @@
          // add to table
          document.getElementById("woTable").appendChild(tr[item]);
          document.getElementById(tr_but[item].delete.id).addEventListener('click',
-             function(event) {
+             function(event) {   // ajax delete
                  //console.log(event.target.value);
                  var delReq = new XMLHttpRequest();
                  delReq.open("GET", "http://52.38.65.142:3000/delete?row_id=" + event.target.value, true);
@@ -116,7 +116,7 @@
                  event.preventDefault();
              });
          document.getElementById(tr_ed[item].edit.id).addEventListener('click',
-             function(event) {
+             function(event) {  // adds inputs with prefilled data
                  var inputs = [];
                  var items = ["name", "reps", "weight", "date", "lbs"];
                  var tbl_row = [];
@@ -144,7 +144,7 @@
                  button.textContent = "save";
                  row.appendChild(button);
                  button.addEventListener("click",
-                     function(event) {
+                     function(event) {//ajax update
                          var edReq = new XMLHttpRequest()
                          var upname = document.getElementById("name"+event.target.value).value;
                          var upreps = document.getElementById("reps"+event.target.value).value;
@@ -167,7 +167,7 @@
      }
  }
 
- function bindSubmit() {
+ function bindSubmit() {  // bind add new element submit
      document.getElementById('tableSubmit').addEventListener('click', function(event) {
          var req = new XMLHttpRequest();
          var work = {
