@@ -3,17 +3,18 @@ module.exports = function(app, request, mysql) {
 
     app.get('/', function(req, res, next) {
         var context = {};
-            res.render('home');
+        res.render('home');
     });
 
     app.post('/', function(req, res, next) {
-            res.render('home');
+        res.render('home');
     });
 
     app.get('/insert', function(req, res, next) {
         var context = {};
-        mysql.pool.query("INSERT INTO workouts (`name`,`reps`,`weight`,`date`,`lbs`)VALUES (?,?,?,?,?)",
-                         [req.query.name,req.query.reps, req.query.weight, req.query.date, req.query.lbs]);
+        if (req.query.name != "") {
+            mysql.pool.query("INSERT INTO workouts (`name`,`reps`,`weight`,`date`,`lbs`)VALUES (?,?,?,?,?)", [req.query.name, req.query.reps, req.query.weight, req.query.date, req.query.lbs]);
+        }
         mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields) {
             if (err) {
                 next(err);
@@ -23,15 +24,37 @@ module.exports = function(app, request, mysql) {
             res.send(context.results);
         });
     });
-    app.get('/getdata', function(req,res,next) {
+    app.get('/getdata', function(req, res, next) {
         var context = {};
-            mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields) {
-                    if (err) {
-                            next(err);
-                            return;
-                    }
-                    context.results = JSON.stringify(rows);
-                    res.send(context.results);
+        mysql.pool.query('SELECT * FROM workouts', function(err, rows, fields) {
+            if (err) {
+                next(err);
+                return;
+            }
+            context.results = JSON.stringify(rows);
+            res.send(context.results);
+        });
+    });
+
+    app.get('/delete', function(req, res, next) {
+        var context = {};
+        mysql.pool.query("DELETE FROM workouts WHERE id=?", [req.query.row_id]);
+        res.send("success");
+    });
+
+    app.get('/simple-update', function(req, res, next) {
+                    console.log(req.query.name);
+                    console.log(req.query.reps);
+                    console.log(req.query.weight);
+                    console.log(req.query.date);
+                    console.log(req.query.row_id);
+        mysql.pool.query("UPDATE workouts SET `name` = ?, `reps` = ?, `weight`=?, `date`=? , `lbs`=? WHERE `id`=? ", [req.query.name, req.query.reps, req.query.weight, req.query.date,req.query.lbs, req.query.row_id],
+            function(err, result) {
+                if (err) {
+                    next(err);
+                    return;
+                }
+                res.send("success");
             });
     });
 
